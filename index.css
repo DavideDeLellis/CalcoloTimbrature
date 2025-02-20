@@ -1,0 +1,100 @@
+.page-field {
+    max-width: 300px;
+    margin: 0 auto;
+    margin-top: .75rem;
+}
+.reset-button {
+    max-width: 50px;
+}
+.submit-button {
+    flex-grow: 1;
+}
+.btns{
+    display: flex;
+    gap: 1rem;
+}
+
+.main {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.calendar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+}
+
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.prev-date{
+    background-color: #ccc; 
+    border-radius: 50%;   
+}
+
+.prev-date, .current-date {
+    padding: 10px;
+    cursor: pointer;
+    margin: 0.1rem;
+}
+
+.current-date:hover {
+    background-color: #a1c9e4;
+    border-radius: 50%;
+}
+
+.page-field-calendar {
+    max-width: 200px;
+    margin-top: .75rem;
+    margin-right: 1rem;
+}
+
+.selected-date {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+}
+
+.weekend-date {
+    background-color: #ffcccc;
+    cursor: not-allowed;
+    border-radius: 50%;
+    padding: 10px;
+    margin: 0.1rem;
+}
+
+@keyframes glowing {
+    0% { background-color: #a3d0ff; }
+    25% { background-color: #82befd; }
+    50% { background-color: #54a4fa; }
+    75% { background-color: #288efc; }
+    100% { background-color: #007bff; }
+}
+
+.save-btn {
+  animation: glowing 1300ms infinite;
+}

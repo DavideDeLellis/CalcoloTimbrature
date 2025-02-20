@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,132 +10,103 @@
     <meta name="author" content="Davide">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .page-field {
-            max-width: 300px;
-            margin: 0 auto;
-            margin-top: .75rem;
-        }
-        .reset-button {
-            max-width: 50px;
-        }
-        .submit-button {
-            flex-grow: 1;
-        }
-        .btns{
-            display: flex;
-            gap: 1rem;
-        }
-    </style>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link rel="stylesheet" href="./index.css">
 </head>
+
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Calcolo timbrature</h1>
-        <p class="text-center">Questa app calcola le ore e i minuti lavorati<br> in base alle timbrature inserite.</p>
-        <form class="mt-4">
-            <div class="form-group page-field">
-                <label for="oraEntrata">Entrata:</label>
-                <input type="time" class="form-control" id="oraEntrata" name="oraEntrata">
+        <div class="">
+            <h1 class="text-center">Calcolo timbrature</h1>
+            <p class="text-center">
+                Questa app calcola le ore e i minuti lavorati in base alle timbrature inserite.<br>
+                Puoi salvare i dati per ogni giorno dell'anno ed esportare in csv i dati per ogni mese.
+            </p>
+            <div class="main">
+                <div class="col-md-4">
+                    <form class="mt-4">
+                        <div class="form-group page-field">
+                            <label for="oraEntrata">Entrata</label>
+                            <input type="time" class="form-control" id="oraEntrata" name="oraEntrata">
+                        </div>
+                        <div class="form-group page-field">
+                            <label for="oraUscitaPausa">Pausa pranzo - Uscita</label>
+                            <input type="time" class="form-control" id="oraUscitaPausa" name="oraUscitaPausa">
+                        </div>
+                        <div class="form-group page-field">
+                            <label for="oraEntrataPausa">Pausa pranzo - Rientro</label>
+                            <input type="time" class="form-control" id="oraEntrataPausa" name="oraEntrataPausa">
+                        </div>
+                        <div class="form-group page-field">
+                            <label for="oraUscita">Uscita</label>
+                            <input type="time" class="form-control" id="oraUscita" name="oraUscita">
+                        </div>
+                        <div class="btns justify-content-between page-field">
+                            <button type="submit" class="btn btn-primary submit-button">Calcola</button>
+                            <button type="reset" class="btn btn-secondary reset-button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="result" class="text-center bg-info page-field"></div>
+                    <div id="overtime" class="text-center bg-success page-field"></div>
+                    <div id="remaining" class="text-center bg-danger text-light page-field"></div>
+                    <div id="error" class="text-center bg-warning text-dark page-field"></div>
+                </div>
+                <div class="col-md-4 mt-4">
+                    <!-- Include the calendar component -->
+                    <div id="calendarContainer">
+                        <div id="calendar" class="calendar">
+                            <div class="calendar-header">
+                                <button id="prevMonth" class="btn btn-secondary">&lt;</button>
+                                <span id="monthYear"></span>
+                                <button type="button" class="btn  btn-dark btn-sm" onclick="exportToCSV()"><i class="fas fa-file-csv">&nbsp;csv</i></button>
+                                <button id="nextMonth" class="btn btn-secondary">&gt;</button>
+                            </div>
+                            <div class="calendar-body">
+                                <div class="calendar-days">
+                                    <div>Dom</div>
+                                    <div>Lun</div>
+                                    <div>Mar</div>
+                                    <div>Mer</div>
+                                    <div>Gio</div>
+                                    <div>Ven</div>
+                                    <div>Sab</div>
+                                </div>
+                                <div id="calendarDates" class="calendar-dates"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="workHoursForm" style="display: none;">
+                        <div style="justify-content: end;display: flex;"><span id="selectedDate"></span></div>
+                        <div style="display: flex;align-items: end;">
+                            <div class="form-group page-field-calendar">
+                                <label for="workHours">Ore lavorate</label>
+                                <input type="number" class="form-control" id="workHours" min="0"
+                                    max="23">
+                            </div>
+                            <div class="form-group page-field-calendar">
+                                <label for="workMinutes">Minuti lavorati</label>
+                                <input type="number" class="form-control" id="workMinutes" min="0"
+                                    max="59">
+                            </div>
+                            <div class="form-group page-field-calendar">
+                                <button type="button" id="save-button" class="btn btn-primary" onclick="saveWorkHours()">Salva</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <div class="form-group page-field">
-                <label for="oraUscitaPausa">Pausa pranzo - Uscita:</label>
-                <input type="time" class="form-control" id="oraUscitaPausa" name="oraUscitaPausa">
-            </div>
-            <div class="form-group page-field">
-                <label for="oraEntrataPausa">Pausa pranzo - Entrata:</label>
-                <input type="time" class="form-control" id="oraEntrataPausa" name="oraEntrataPausa">
-            </div>
-            <div class="form-group page-field">
-                <label for="oraUscita">Uscita:</label>
-                <input type="time" class="form-control" id="oraUscita" name="oraUscita">
-            </div>
-            <div class="btns justify-content-between page-field">
-                <button type="submit" class="btn btn-primary submit-button">Calcola</button>
-                <button type="reset" class="btn btn-secondary reset-button">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </form>
-        <div id="result" class="text-center bg-info page-field"></div>
-        <div id="overtime" class="text-center bg-success page-field"></div>
-        <div id="remaining" class="text-center bg-danger text-light page-field"></div>
-        <div id="error" class="text-center bg-warning text-dark page-field"></div>
+
+
+        </div>
     </div>
-    
-    <script>
-        document.querySelector('form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const oraEntrata = document.getElementById('oraEntrata').value;
-            const oraUscitaPausa = document.getElementById('oraUscitaPausa').value;
-            const oraEntrataPausa = document.getElementById('oraEntrataPausa').value;
-            const oraUscita = document.getElementById('oraUscita').value;
 
-            if (!oraEntrata || !oraUscitaPausa || !oraEntrataPausa || !oraUscita) {
-                document.getElementById('error').textContent = 'Tutti i campi devono essere valorizzati';
-                document.getElementById('result').textContent = '';
-                document.getElementById('overtime').textContent = '';
-                document.getElementById('remaining').textContent = '';
-                return;
-            }
-
-            const [entrataOre, entrataMinuti] = oraEntrata.split(':').map(Number);
-            const [uscitaPausaOre, uscitaPausaMinuti] = oraUscitaPausa.split(':').map(Number);
-            const [entrataPausaOre, entrataPausaMinuti] = oraEntrataPausa.split(':').map(Number);
-            const [uscitaOre, uscitaMinuti] = oraUscita.split(':').map(Number);
-
-            const entrata = new Date(0, 0, 0, entrataOre, entrataMinuti);
-            const uscitaPausa = new Date(0, 0, 0, uscitaPausaOre, uscitaPausaMinuti);
-            const entrataPausa = new Date(0, 0, 0, entrataPausaOre, entrataPausaMinuti);
-            const uscita = new Date(0, 0, 0, uscitaOre, uscitaMinuti);
-
-            if (entrata >= uscitaPausa || entrataPausa >= uscita || uscitaPausa >= entrataPausa) {
-                document.getElementById('error').textContent = 'Gli orari inseriti non sono validi. Assicurati che l\'orario di entrata sia precedente all\'orario di uscita.';
-                document.getElementById('result').textContent = '';
-                document.getElementById('overtime').textContent = '';
-                document.getElementById('remaining').textContent = '';
-                return;
-            }
-
-            document.getElementById('error').textContent = '';
-
-            const mattinaLavorata = (uscitaPausa - entrata) / 1000 / 60; // in minutes
-            const pomeriggioLavorato = (uscita - entrataPausa) / 1000 / 60; // in minutes
-            const totaleLavorato = mattinaLavorata + pomeriggioLavorato;
-
-            const oreLavorate = Math.floor(totaleLavorato / 60);
-            const minutiLavorati = totaleLavorato % 60;
-
-            document.getElementById('result').textContent = `Hai lavorato ${oreLavorate} ore e ${minutiLavorati} minuti`;
-
-            const totalMinutesWorked = oreLavorate * 60 + minutiLavorati;
-            const standardWorkMinutes = 480; //8 * 60
-
-            if (totalMinutesWorked > standardWorkMinutes) {
-                const overtimeMinutes = totalMinutesWorked - standardWorkMinutes;
-                const overtimeHours = Math.floor(overtimeMinutes / 60);
-                const overtimeRemainingMinutes = overtimeMinutes % 60;
-                document.getElementById('overtime').textContent = `Straordinari: ${overtimeHours} ore e ${overtimeRemainingMinutes} minuti`;
-                document.getElementById('remaining').textContent = '';
-            } else if(totalMinutesWorked < standardWorkMinutes){
-                const remainingMinutes = standardWorkMinutes - totalMinutesWorked;
-                const remainingHours = Math.floor(remainingMinutes / 60);
-                const remainingRemainingMinutes = remainingMinutes % 60;
-                document.getElementById('remaining').textContent = `Rimanenti da lavorare: ${remainingHours} ore e ${remainingRemainingMinutes} minuti`;
-                document.getElementById('overtime').textContent = '';
-            }else{
-                document.getElementById('overtime').textContent = '';
-                document.getElementById('remaining').textContent = '';
-            }
-        });
-
-        document.querySelector('form').addEventListener('reset', function() {
-            document.getElementById('result').textContent = '';
-            document.getElementById('overtime').textContent = '';
-            document.getElementById('remaining').textContent = '';
-            document.getElementById('error').textContent = '';
-        });
-    </script>
+    <script src="./index.js"></script>
 </body>
+
 </html>
