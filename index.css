@@ -18,6 +18,7 @@
     display: flex;
     align-items: start;
     justify-content: center;
+    flex-wrap: wrap; /* Ensure columns wrap on smaller screens */
 }
 
 .calendar {
@@ -97,4 +98,12 @@
 
 .save-btn {
   animation: glowing 1300ms infinite;
+}
+
+/* Ensure columns stack vertically on smaller screens */
+@media (max-width: 500px) {
+    .col-md-4 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 }
